@@ -1,40 +1,49 @@
-# 내 풀이에서 진법 변환과정에서 문제있음 53.5프로 
-# 다른사람 conversion함수 참조
+## 2번 풀었음
 
 
-def conversion(n,num):
-	if num==0:return "0"
-	t="0123456789ABCDEF"
-	ret=""
-	while num>0:
-		ret+=t[int(num%n)]
-		num=int(num/n)
+def conversion_number(number,base,number_list):
+    tmp_number='0123456789ABCDEF'
+    tmp_list=[]
+    while number!=0:
+          a=number%base
+          a=tmp_number[a]
+          tmp_list.append(a)
+          number=number//base
 
-	return ret[::-1]
+    if len(tmp_list)==0:
+        number_list.append(number)
+        return
 
+    tmp_list.reverse()
+    for i in tmp_list:number_list.append(i)
+
+def find_answer(p,m,number_list,c):
+    answer_list=[]
+    cnt=1
+    idx=0
+    while idx<c:
+          if cnt>m:
+             cnt=1
+
+          if cnt==p:
+              answer_list.append(number_list[idx])
+
+          idx+=1
+          cnt+=1
+
+    return answer_list
 
 
 
 def solution(n, t, m, p):
     answer = ''
-    answer_list=[]
-    a=[]
+    number_list=[]
     start_number=0
-    while True:
-        if t*m<=len(answer_list): ## m 은 멤버수 t = 표시할숫자 m * t면 표시할숫자를 만족할 개수가 됨
-            while len(answer_list)!=t*m:answer_list.pop()
-            cnt=1
-            for s in answer_list:
-                if cnt>m:cnt=1
-                if cnt==p:a.append(s)
-                cnt+=1
-            break
+    while t*m>len(number_list): # t*m = 게임을 진행할동안의숫자
+          conversion_number(start_number,n,number_list)
+          start_number+=1
 
-        conversion_number=list(conversion(n,start_number)) #1. 진수변환
-        while len(conversion_number)!=0:answer_list.append(conversion_number.pop(0))
-        start_number+=1
-
-
-    for tmp in a:answer+=str(tmp)
-
+    answer_list=find_answer(p,m,number_list,t*m)
+    for i in answer_list:answer+=str(i)
     return answer
+
