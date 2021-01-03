@@ -1,43 +1,37 @@
-def check_string(s):
+# 2번쨰 품
+
+def check_alpha_list(alpha):
     mo=0
     ja=0
-    for i in s:
-        if i =='a' or i=='e' or i=='i' or i=='o' or i=='u':
+    for i in alpha:
+        if i=='a' or i=='e' or i=='i' or i=='o' or i=='u':
             mo+=1
+
         else:
             ja+=1
 
     if mo>=1 and ja>=2:
         return True
-    else:
-        return False
 
+    return False
 
-def dfs(cur,s):
-    global l,c,string
-    if len(s)==l: ## 1. 단어 완성시 암호가 될수 있는지 확인
-        if check_string(s):
-            print(s)
+def dfs(alpha,cur):
+    global alpha_list,l,c
+
+    if len(alpha)==l:
+        if check_alpha_list(alpha):
+            print(alpha)
+            return
+        else:
             return
 
-    for i in range(cur,c):  # 2. 무조건 선택한 경우 다음의 것만 골라야함
-        tmp=s
-        dfs(i+1,s+string[i])
-        s=tmp
-
+    for i in range(cur,len(alpha_list)):
+        dfs(alpha+alpha_list[i],i+1)
 
 
     return
 
-
-
 l,c=map(int,input().split())
-string=list(map(str,input().split()))
-string.sort()
-check=[False]*c
-
-dfs(0,"")
-
-
-
-
+alpha_list=list(map(str,input().split()))
+alpha_list.sort()
+dfs("",0)
