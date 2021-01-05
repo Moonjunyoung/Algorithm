@@ -8,7 +8,7 @@ for _ in range(n):
     while True:
         if len(stack) == 0: ##초기값이 0일떄  추가
             stack.append(cnt)
-            answer_list.append('+')
+            answer_list.append('+') 
             cnt+=1
 
         else:
