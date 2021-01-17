@@ -2,34 +2,36 @@ from collections import deque
 dx=[0,0,1,-1]
 dy=[1,-1,0,0]
 
-col,row=map(int,input().split())
-map_view=[0]*row
-dist=[-1]*row
+m,n=map(int,input().split())
 
-for i in range(row):
-    map_view[i]=list(map(int,input()))
-    dist[i]=[-1]*col
+board=[0]*n
+visited=[False]*n
+for i in range(n):
+    board[i]=list(map(int,input()))
+    visited[i]=[False]*m
 
 queue=deque()
-queue.append([0,0])
-dist[0][0]=0
+queue.append([0,0,0]) # 1. 현재 좌표 와 벽을 부순횟수를 넣음
+visited[0][0]=True
+
 while queue:
-    cur_x,cur_y=queue.popleft()
+      cur_x,cur_y,Break_wall=queue.popleft()
 
-    # 1. 벽일경우에 맨뒤에 넣고 벽이 아닐경우에는 맨앞에 넣음 
-    # 2. 벽일경우 dist갱신 벽이아닐경우는 갱신 x
-    # 즉 벽이아닌경우의 값이 나오면 먼저처리하고 벽인 값이 나오면 나중에 처리하여 최소 몇개의 벽을 부수는지확인이가능하다.
-    for i in range(4):
-        da=dx[i]+cur_x
-        db=dy[i]+cur_y
-        if da<0 or db<0 or da>=row or db>=col:continue
-        if dist[da][db]==-1 and map_view[da][db]==1: #벽일경우 맨뒤에넣음 값갱신해야됨
-            queue.append([da,db])
-            dist[da][db]=dist[cur_x][cur_y]+1 #값갱신
+      if cur_x ==n-1 and cur_y==m-1:
+          print(Break_wall)
+          break
 
-        elif dist[da][db]==-1 and map_view[da][db]==0: #벽이아닐경우 맨앞에넣음
-             queue.appendleft([da,db])
-             dist[da][db]=dist[cur_x][cur_y]
+      for i in range(4):
+          nx=dx[i]+cur_x
+          ny=dy[i]+cur_y
 
+          if nx<0 or ny<0 or nx>=n or ny>=m:continue
+          # 2. 벽을 안부셔도되는경우
+          if board[nx][ny]==0 and visited[nx][ny]==False:
+             visited[nx][ny]=1
+             queue.appendleft([nx,ny,Break_wall])
 
-print(dist[row-1][col-1])
+          # 3. 벽을 부셔야하는경우 (벽을 부셧으니 벽부순횟수를 갱신)
+          elif board[nx][ny]==1 and visited[nx][ny]==False:
+               visited[nx][ny]=True
+               queue.append([nx,ny,Break_wall+1])
